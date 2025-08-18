@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }} - 記事詳細</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="detail-container">
+        <a href="{{ url_for('select', keyword=request.args.get('keyword')) }}" class="back-link">← 検索結果に戻る</a>
+        <h1>{{ title }}</h1>
+        <p class="published-at">公開日: {{ publishedAt }}</p>
+        <p class="source-link">元記事: <a href="{{ url }}" target="_blank">{{ url }}</a></p>
+
+        <div class="analysis-section">
+            <h2>AIによる分析</h2>
+            <div class="analysis-card">
+                <!-- 以前の複数の項目を削除し、analysis_textを一つのpタグで表示するように変更 -->
+                <p>{{ analysis_text }}</p>
+            </div>
+        </div>
+        <div class="original-content-section">
+        <h2>元の記事本文</h2>
+            <div class="original-content-box">
+                <p>{{ content }}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

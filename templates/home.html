@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIニュース検索</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+
+
+<body>
+    <div class="background-container">
+        <!-- 背景画像はCSSで設定されます -->
+        <div class="overlay-content">
+            <div class="search-form-container">
+                <h1 class="main-title">ニュース検索</h1>
+                <form action="/" method="post" class="search-form">
+                    <input type="text" name="keyword" placeholder="🔍検索キーワードを入力" required>
+                    <button type="submit">検索</button>
+                </form>
+            </div>
+           
+        <!-- おすすめワードカット -->
+        <div class="puzzle-pieces">
+            <a href="{{ url_for('select', keyword='AI') }}" class="piece piece1">
+                <img src="{{ url_for('static', filename='images/piece_brown.png') }}">
+                <p class="label1">AI</p>
+            </a>
+            <a href="{{ url_for('select', keyword='政治') }}" class="piece piece2">
+                <img src="{{ url_for('static', filename='images/piece_green.png') }}">
+                <p class="label2">政治</p>
+            </a>
+            <a href="{{ url_for('select', keyword='気候変動') }}" class="piece piece3">
+                <img src="{{ url_for('static', filename='images/piece_pink.png') }}">
+                <p class="label3">気候変動</p>
+            </a>
+        </div>
+
+
+            <!-- ガチャガチャの画像を配置 -->
+            <!-- cssに合わせてmachineクラスを追加 -->
+            <img src="{{ url_for('static', filename='images/gachapon.png') }}" alt="ガチャガチャ" id="gacha" style="cursor:pointer;">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("gacha").addEventListener("click", function() {
+            // ガチャガチャボタンをクリックしたら、/gacha ルートに遷移
+            window.location.href = "{{ url_for('gacha') }}";
+        });
+
+        // ピースの動的な配置ロジック
+        function placePieces() {
+            const pieces = document.querySelectorAll('.piece');
+            const searchForm = document.querySelector('.search-form-container');
+            const gacha = document.getElementById('gacha');
+            const container = document.querySelector('.overlay-content');
+
+            const containerRect = container.getBoundingClientRect();
+            const searchRect = searchForm.getBoundingClientRect();
+            const gachaRect = gacha.getBoundingClientRect();
+            
+            const placedRects = [
+                // 検索フォームとガチャガチャの領域を初期配置として設定
+                { left: searchRect.left, top: searchRect.top, right: searchRect.right, bottom: searchRect.bottom, width: searchRect.width, height: searchRect.height },
+                { left: gachaRect.left, top: gachaRect.top, right: gachaRect.right, bottom: gachaRect.bottom, width: gachaRect.width, height: gachaRect.height }
+            ];
+
+            pieces.forEach(piece => {
+                const pieceRect = piece.getBoundingClientRect();
+                let isOverlapping = true;
+                let attempts = 0;
+                const maxAttempts = 100;
+
+                while (isOverlapping && attempts < maxAttempts) {
+                    attempts++;
+                    
+                    // 新しいランダムな位置を計算
+                    const minY = searchRect.bottom;
+                    const maxY = gachaRect.top - pieceRect.height;
+                    const newY = Math.random() * (maxY - minY) + minY;
+                    
+                    // 左右に10%ずつの余白を設ける
+                    const margin = containerRect.width * 0.3;
+                    const minX = margin;
+                    const maxX = containerRect.width - pieceRect.width - margin;
+                    const newX = Math.random() * (maxX - minX) + minX;
+
+                    // 重なり判定用の仮の矩形を作成
+                    const tempRect = {
+                        left: newX,
+                        top: newY,
+                        right: newX + pieceRect.width,
+                        bottom: newY + pieceRect.height
+                    };
+                    
+                    isOverlapping = false;
+                    
+                    // すでに配置されたすべての要素と重なっていないかチェック
+                    for (const rect of placedRects) {
+                        if (
+                            tempRect.left < rect.right &&
+                            tempRect.right > rect.left &&
+                            tempRect.top < rect.bottom &&
+                            tempRect.bottom > rect.top
+                        ) {
+                            isOverlapping = true;
+                            break;
+                        }
+                    }
+                    
+                    // 重なりがなければ、この位置を確定し、placedRectsに追加
+                    if (!isOverlapping) {
+                        piece.style.left = `${newX}px`;
+                        piece.style.top = `${newY}px`;
+                        piece.style.position = 'absolute';
+                        placedRects.push(tempRect); // 新しい位置情報を記録
+                        break;
+                    }
+                }
+
+                if (attempts === maxAttempts) {
+                    console.warn("ピースの配置に失敗しました。");
+                }
+            });
+        }
+
+        // ページ読み込み時とウィンドウリサイズ時に実行
+        window.addEventListener('load', placePieces);
+        window.addEventListener('resize', placePieces);
+    </script> 
+</body>
+
+
+</html>
+

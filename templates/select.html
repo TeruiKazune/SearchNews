@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>検索結果</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+</head>
+
+
+<body>
+    <h1>ニュース検索</h1>
+    <form method="post">
+        <input type="text" name="keyword" placeholder="🔍検索" required>
+        <button type="submit">検索</button>
+    </form>
+    <h2 class="keyword-display">検索ワード: {{ keyword }}</h2>
+
+    <hr>
+
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+
+    <!-- <h2>検索結果</h2> -->
+    {% if articles %}
+        <div class="grid-container">
+            {% for article in articles %}
+                <div class="article-cell">
+                    <a href="{{ url_for('detail', article_id=loop.index0) }}" class="article-details-link">
+                    <!-- <div class="article-details"> -->
+                        <h2>{{ article.title }}</h2>
+                        <p><strong>公開日:</strong> {{ article.publishedAt }}</p>
+                    </a>
+                    <a href="{{ article.url }}" target="_blank" class="read-more-link">元記事を読む</a>
+                </div>
+            {% endfor %}
+        </div>
+        <p>記事の詳細は「元記事を読む」からアクセスしてください。</p>
+    {% else %}
+        <p>記事が見つかりませんでした。キーワードを変更して再度お試しください。</p>
+    {% endif %}
+</body>
+</html>
