@@ -3,17 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIニュース検索</title>
+    <title>PuzzNews</title>
     <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f4f8;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #333;
+            letter-spacing: -2px;
+            margin: 0;
+            user-select: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-tagline {
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .puzzle-svg {
+            width: 150px;
+            height: 150px;
+            fill: none;
+            stroke: #4a90e2;
+            stroke-width: 5px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.2));
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .logo-container:hover .puzzle-svg {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .animated-puzzle-svg {
+            animation: rotate 10s linear infinite;
+        }
+    </style>
 </head>
-
-
 <body>
+    <div class="logo-container">
+        <svg class="puzzle-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 50 50 L 150 50 L 150 100 L 100 100 A 25 25 0 0 1 100 150 L 50 150 A 25 25 0 0 1 50 100 L 50 50 Z" />
+            <path d="M 150 50 L 150 150 L 100 150 A 25 25 0 0 1 100 100 L 150 100 Z" stroke="#e27c4a" stroke-width="5" />
+        </svg>
+        <div class="logo-text">PuzzNews</div>
+        <div class="logo-tagline">ニュースの断片を、つなぎ合わせる。</div>
+    </div>
+
     <div class="background-container">
         <!-- 背景画像はCSSで設定されます -->
         <div class="overlay-content">
             <div class="search-form-container">
-                <h1 class="main-title">ニュース検索</h1>
+                <!-- <h1 class="main-title">ニュース検索</h1> -->
                 <form action="/" method="post" class="search-form">
                     <input type="text" name="keyword" placeholder="🔍検索キーワードを入力" required>
                     <button type="submit">検索</button>

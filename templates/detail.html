@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }} - 記事詳細</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>記事詳細</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/detailstyle.css') }}">
 </head>
 <body>
     <div class="detail-container">
@@ -12,11 +12,16 @@
         <p class="published-at">公開日: {{ publishedAt }}</p>
         <p class="source-link">元記事: <a href="{{ url }}" target="_blank">{{ url }}</a></p>
 
-        <div class="analysis-section">
-            <h2>AIによる分析</h2>
-            <div class="analysis-card">
-                <!-- 以前の複数の項目を削除し、analysis_textを一つのpタグで表示するように変更 -->
-                <p>{{ analysis_text }}</p>
+        <div class="summary-section">
+            <h2>AIによる要約</h2>
+            <div class="summary-card">
+                <p>{{ summary_text }}</p>
+            </div>
+        </div>
+        <div class="suggestion-section">
+            <h2>AIによる提案</h2>
+            <div class="suggestion-card">
+                <p>{{ suggestion_text }}</p>
             </div>
         </div>
         <div class="original-content-section">

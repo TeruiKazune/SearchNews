@@ -7,7 +7,7 @@ body {
 
 }
 
-h1{
+h1 {
     align-items: center;
     background: transparent;
     flex-direction: column;
@@ -50,10 +50,10 @@ h1{
     display: block;
 }
 
-.piece img{
+.piece img {
     width: 100%;
     height: auto;
-    display: block; 
+    display: block;
 }
 
 .piece1 {
@@ -80,27 +80,29 @@ h1{
 } */
 
 
-.label1, .label2, .label3{
+.label1,
+.label2,
+.label3 {
     position: absolute;
-    top:50%;
-    left:50%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -100%);
-    font-size:15px;
+    font-size: 15px;
     font-weight: bold;
 }
 
-.label1{
+.label1 {
     color: rgb(89, 103, 77);
 }
 
-.label2{
-    color:rgb(22, 132, 3) ;
+.label2 {
+    color: rgb(22, 132, 3);
 }
 
-.label3{
-    color:rgb(251, 12, 147) ;
+.label3 {
+    color: rgb(251, 12, 147);
 }
-  
+
 
 /* ガチャガチャ機 */
 #gacha {
@@ -117,7 +119,7 @@ h1{
 .search-form-container {
     position: absolute;
     top: 10%;
-    left: -15%;
+    left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
@@ -129,43 +131,40 @@ h1{
 /* フォーム内レイアウト */
 .search-form {
     display: flex;
+    gap: 10px;
     justify-content: center;
 }
 
 .search-form input {
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1.5px solid #616161; 
-  border-radius: 4px;
-  box-sizing: border-box;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1.5px solid #acfa8b;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .search-form button {
     padding: 8px 16px;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
-    border: 2px solid #616161; 
+    border: 2px solid #acfa8b;
 }
 
 
 /* 以下select.htmlについて */
-form {
-    position: absolute;
-    top: 10%; /* 親要素の高さの中央 */
-    left: 50%; /* 親要素の幅の中央 */
-    transform: translate(-50%, -50%); /* 要素自体のサイズを考慮して完全な中央に配置 */
-}
 .grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2列を自動で作成 */
-  /* grid-template-rows: repeat(2, 1fr); */
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2列を自動で作成 */
+    /* grid-template-rows: repeat(2, 1fr); */
+    gap: 20px;
 }
 
 .article-cell {
     position: relative;
     display: flex;
-    flex-direction: column; /* 縦方向に並べる */
+    flex-direction: column;
+    /* 縦方向に並べる */
     justify-content: space-between;
     /* align-items: center;  */
 
@@ -175,12 +174,14 @@ form {
     /* text-decoration: none; リンクの下線を消す */
     color: #333;
     background-color: #f9f9f9;
-    transition: transform 0.2s; /* ホバー時のアニメーション */
+    transition: transform 0.2s;
+    /* ホバー時のアニメーション */
 }
 
 .article-cell:hover {
-  transform: translateY(-5px); /* マウスホバーで少し上に移動 */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+    /* マウスホバーで少し上に移動 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .article-details-link {
@@ -188,15 +189,18 @@ form {
     text-decoration: none;
     color: #333;
     display: block;
-    flex-grow: 1; /* 親要素の残りのスペースを全て占有 */
+    flex-grow: 1;
+    /* 親要素の残りのスペースを全て占有 */
 }
+
 /* リンクを横に並べるための新しいFlexboxコンテナ */
 .read-more-link {
     text-align: right;
     text-decoration: none;
     color: #007bff;
     font-weight: bold;
-    margin-top: 10px; /* 上部に余白を追加 */
+    margin-top: 10px;
+    /* 上部に余白を追加 */
 }
 
 

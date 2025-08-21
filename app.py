@@ -25,7 +25,8 @@ genai.configure(api_key=GEMINI_API_KEY)
 model_name_to_use = 'models/gemini-1.5-flash-latest'
 model = genai.GenerativeModel(model_name_to_use)
 
-def analyze_article_with_gemini(text):
+#ニュースの要約をするルート
+def summarize_article_with_gemini(text):
     #エラー時のデフォルト値を定義
     default_error_response = "記事の分析に失敗しました。"
     try:
@@ -54,6 +55,38 @@ def analyze_article_with_gemini(text):
     except Exception as e:
         print(f"Gemini APIによる記事分析中にエラーが発生しました: {e}")
         return default_error_response
+    
+# ニュース活用の提案をするルート
+def suggest_article_with_gemini(text):
+    # エラー時のデフォルト値を定義
+    default_error_response = "記事の分析に失敗しました。"
+    try:
+        # プロンプトを出来事の構造分析に特化させる
+        # ここをJSONではなく、一つの文章を生成するように変更
+        prompt = f"""
+以下の記事を分析し、このニュースをどの業界における就職活動のどの場面でどう活用できるのかを具体的に2文で示してください。それぞれの定義は以下の通りです。どの業界：金融、商社、外資、食品、ITなどあらゆる切り口から見た業界、どの場面：面接、ES、OBOG訪問など選考フローにおけるあらゆる場面、どう活用できるか：知識や理解を面接官にアピールするためにニュースを通り活用できるか具体例を示す
+
+記事本文:
+{text}
+"""
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.7,
+            ),
+        )
+
+        if response and response.candidates:
+            # 取得した文章をそのまま返す
+            return response.candidates[0].content.parts[0].text
+        else:
+            print("Gemini APIからの分析レスポンスが空でした。")
+            return default_error_response
+    except Exception as e:
+        print(f"Gemini APIによる記事分析中にエラーが発生しました: {e}")
+        return default_error_response
+
+
 
 # ニュース検索フォームを表示するルート
 @app.route("/", methods=["GET", "POST"])
@@ -62,8 +95,13 @@ def home():
         keyword = request.form.get("keyword")
         if keyword:
             return redirect(url_for("select", keyword=keyword))
-    
+   
+    # HTMLテンプレートをレンダリングし、データを渡す
     return render_template('home.html')
+
+
+    # return render_template("home.html")
+
 
 @app.route('/gacha')
 def gacha():
@@ -72,19 +110,31 @@ def gacha():
     return redirect(url_for('select', keyword=keyword))
 
 
-@app.route("/select")
+
+@app.route("/select", methods=["GET", "POST"])
 def select():
+    if request.method == "POST":
+        keyword = request.form.get("keyword")
+        if keyword:
+            return redirect(url_for("select", keyword=keyword))
+        
+    # GETリクエストの場合（URLからの直接アクセスやリダイレクト）
     keyword = request.args.get("keyword")
     if not keyword:
         return redirect(url_for("home"))
 
+
     url = f"https://gnews.io/api/v4/search?q={keyword}&lang=ja&max=4&token={API_KEY}"
     response = requests.get(url).json()
 
-    # グローバル変数ではなくセッションに保存するように変更
-    session['search_results'] = response.get("articles", [])
 
-    return render_template("select.html", articles=session['search_results'], keyword=keyword)
+    global search_results
+    search_results = response.get("articles", [])
+
+
+    return render_template("select.html", articles=search_results, keyword=keyword)
+
+
 
 # -------- 詳細ページ --------
 @app.route("/detail/<int:article_id>")
@@ -105,17 +155,20 @@ def detail(article_id):
     article.parse()
 
     # Gemini分析
-    # analyze_article_with_gemini関数が文字列を返すように変更したため、戻り値も文字列になる
-    analysis_text = analyze_article_with_gemini(article.text)
+    # summaryze_article_with_gemini関数が文字列を返すように変更したため、戻り値も文字列になる
+    summary_text = summarize_article_with_gemini(article.text)
+    suggestion_text = suggest_article_with_gemini(article.text)
 
-    return render_template("detail.html",
-                            title=article_data["title"],
-                            publishedAt=article_data["publishedAt"],
-                            url=article_url,
-                            content=article.text,
-                            # 複数の項目ではなく、1つの文章としてHTMLに渡す
-                            analysis_text=analysis_text
-                            )
+    return render_template(
+        "detail.html",
+        title=article_data["title"],
+        publishedAt=article_data["publishedAt"],
+        url=article_url,
+        content=article.text,
+        # 複数の項目ではなく、1つの文章としてHTMLに渡す
+        summary_text=summary_text,
+        suggestion_text=suggestion_text,
+    )
 
 
 if __name__ == "__main__":
