@@ -173,4 +173,4 @@ def detail(article_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
-# Herokuへの強制プッシュのための変更（4回目）
+# Herokuへの強制プッシュのための変更（6回目）
